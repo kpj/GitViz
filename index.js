@@ -90,14 +90,24 @@ parseGitRepository(
   // setup network
   cytoscape.use(cola)
   let cy = cytoscape({
-    container: document.getElementById('container')
+    container: document.getElementById('container'),
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'label': 'data(label)'
+        }
+      }
+    ]
   })
 
   // add nodes
+  cy.startBatch()
   cy.add({
     group: 'nodes',
     data: {
-      id: '/'
+      id: '/',
+      label: '/'
     },
     position: { x: 0, y: 0 }
   })
@@ -107,7 +117,8 @@ parseGitRepository(
     cy.add({
       group: 'nodes',
       data: {
-        id: entry.id
+        id: entry.id,
+        label: entry.label
       },
       position: { x: 0, y: 0 }
     })
@@ -125,6 +136,7 @@ parseGitRepository(
       position: { x: 0, y: 0 }
     })
   }
+  cy.endBatch()
 
   let layout = cy.layout({
     name: 'cola',
