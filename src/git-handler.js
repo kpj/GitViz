@@ -25,6 +25,7 @@ export async function parseGitRepository (repoUrl) {
   // get data from repo
   console.log('Getting commits')
   let commitList = await git.log({ dir })
+  commitList.reverse()
 
   let data = []
   for (let commit of commitList) {
