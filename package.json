@@ -10,6 +10,16 @@
   "author": "kpj",
   "license": "ISC",
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-runtime": "^6.26.0",
     "parcel-bundler": "^1.12.3"
+  },
+  "dependencies": {
+    "@isomorphic-git/lightning-fs": "^3.2.1",
+    "babel-polyfill": "^6.26.0",
+    "cytoscape": "^3.6.0",
+    "cytoscape-cola": "^2.3.0",
+    "isomorphic-git": "^0.54.2"
   }
 }
