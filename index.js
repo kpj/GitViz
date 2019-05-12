@@ -47,6 +47,7 @@ async function convertFilesToGraph (files) {
     for (let comp of fname.split('/')) {
       root += '/' + comp
       if (allNodes.includes(comp)) {
+        prevRoot = root
         continue
       }
       allNodes.push(comp)
