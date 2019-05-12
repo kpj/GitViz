@@ -3,6 +3,10 @@ import 'babel-polyfill' // ReferenceError: regeneratorRuntime is not defined
 import { parseGitRepository } from './src/git-handler'
 import { convertFilesToTree, Graph } from './src/graph-helper'
 
+function timer (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 // parsing
 parseGitRepository(
   'https://github.com/kpj/project_manager'
@@ -19,12 +23,20 @@ parseGitRepository(
 
   // setup network
   let g = new Graph()
-
-  let curData = data[0]
-  g.addNodes(curData.tree.nodes)
-  g.addEdges(curData.tree.edges)
-
-  g.render()
-
   console.log(g)
+
+  const iterate = async () => {
+    for (let cur of data) {
+      console.log(cur.commit.oid)
+      g.clear()
+
+      g.addNodes([{ id: '/', label: '/' }])
+      g.addNodes(cur.tree.nodes)
+      g.addEdges(cur.tree.edges)
+
+      g.render()
+      await timer(3000)
+    }
+  }
+  iterate()
 })

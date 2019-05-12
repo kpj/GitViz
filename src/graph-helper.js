@@ -17,24 +17,16 @@ export class Graph {
       ]
     })
 
-    // add root node
-    this.cy.add({
-      group: 'nodes',
-      data: {
-        id: '/',
-        label: '/'
-      },
-      position: { x: 0, y: 0 }
-    })
+    this.layout = undefined
   }
 
   render () {
-    let layout = this.cy.layout({
+    this.layout = this.cy.layout({
       name: 'cola',
       fit: false,
       infinite: true
     })
-    layout.run()
+    this.layout.run()
   }
 
   addNodes (nodes) {
@@ -70,6 +62,14 @@ export class Graph {
     }
 
     this.cy.endBatch()
+  }
+
+  clear () {
+    if (this.layout !== undefined) {
+      this.layout.stop()
+    }
+
+    this.cy.elements().remove()
   }
 }
 
