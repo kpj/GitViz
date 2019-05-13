@@ -59,7 +59,7 @@ export class Graph {
           id: entry.id,
           label: entry.label
         },
-        position: { x: 0, y: 0 }
+        position: entry.position || { x: 0, y: 0 }
       })
     }
 
@@ -102,6 +102,19 @@ export class Graph {
     let newEdges = new Set(edges)
     let addedEdges = [...newEdges].filter(
       x => addedNodesIds.has(x.source) || addedNodesIds.has(x.target))
+
+    // add starting position to nodes with parent
+    for (let n of addedNodes) {
+      let parentId
+      let parts = n.id.split('/')
+
+      while (!existingNodesIds.has(parentId)) {
+        parts.pop()
+        parentId = parts.join('/') || '/'
+      }
+
+      n.position = Object.assign({}, this.cy.getElementById(parentId).position())
+    }
 
     console.log(addedNodes, addedEdges)
     console.log(removedNodeIds)
