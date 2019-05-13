@@ -7,6 +7,22 @@ function timer (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+function formatCommit (commit) {
+  console.log(commit)
+  let date = new Date(commit.committer.timestamp * 1000)
+
+  var year = date.getFullYear()
+  var month = (date.getMonth() + 1).toString().padStart(2, '0') // lol@+1
+  var day = date.getDate().toString().padStart(2, '0')
+  var hours = date.getHours().toString().padStart(2, '0')
+  var minutes = date.getMinutes().toString().padStart(2, '0')
+  var seconds = date.getSeconds().toString().padStart(2, '0')
+
+  let dateStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+
+  return `${dateStr} (${commit.message})`
+}
+
 // parsing
 parseGitRepository(
   'https://github.com/kpj/project_manager'
@@ -31,6 +47,7 @@ parseGitRepository(
   g.addEdges(cur.tree.edges)
 
   g.render()
+  document.getElementById('header').innerHTML = formatCommit(cur.commit)
 
   // iterate over following commits
   let delay = 2000
@@ -38,6 +55,7 @@ parseGitRepository(
     await timer(delay)
     for (let cur of data) {
       console.log(cur.commit.oid)
+      document.getElementById('header').innerHTML = formatCommit(cur.commit)
 
       if (g.changeState(cur.tree.nodes, cur.tree.edges)) {
         g.render()
