@@ -21,10 +21,17 @@ export class Graph {
   }
 
   render () {
+    // stop old layout if necessary
+    if (this.layout !== undefined) {
+      this.layout.stop()
+    }
+
+    // create new layout
     this.layout = this.cy.layout({
       name: 'cola',
       fit: false,
-      infinite: true
+      infinite: true,
+      randomize: false
     })
     this.layout.run()
   }
@@ -64,6 +71,51 @@ export class Graph {
     this.cy.endBatch()
   }
 
+  /**
+   * Add new nodes/edges and remove stale ones
+   */
+  changeState (proposedNodes, edges) {
+    // extract ids
+    let existingNodesIds = new Set(this.cy.nodes().map(n => n.id()))
+    let proposedNodeIds = new Set(proposedNodes.map(n => n.id))
+
+    // check which nodes were added/removed
+    let addedNodes = proposedNodes.filter(x => !existingNodesIds.has(x.id))
+    let removedNodes = new Set(
+      [...existingNodesIds].filter(x => !proposedNodeIds.has(x)))
+
+    // check which edges were added
+    let addedNodesIds = new Set(addedNodes.map(n => n.id))
+    let newEdges = new Set(edges)
+    let addedEdges = [...newEdges].filter(
+      x => addedNodesIds.has(x.source) || addedNodesIds.has(x.target))
+
+    console.log(addedNodes, addedEdges)
+    console.log(removedNodes)
+
+    // apply changes
+    let somethingChanged = false
+
+    // add new entities
+    if (addedNodes.length) {
+      this.addNodes(addedNodes)
+      this.addEdges(addedEdges)
+
+      somethingChanged = true
+    }
+
+    // remove old nodes
+    this.cy.startBatch()
+    for (let nId of removedNodes) {
+      // edges are removed automatically
+      this.cy.elements(`node[id = "${nId}"]`).remove()
+      somethingChanged = true
+    }
+    this.cy.endBatch()
+
+    return somethingChanged
+  }
+
   clear () {
     if (this.layout !== undefined) {
       this.layout.stop()
@@ -80,6 +132,13 @@ export async function convertFilesToTree (files) {
     edges: []
   }
 
+  // add root node
+  graphData.nodes.push({
+    id: '/',
+    label: '/'
+  })
+
+  // add each file from commit as node
   for (let fname of files) {
     let prevRoot = ''
     let root = ''

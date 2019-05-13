@@ -9,6 +9,7 @@ test('construct basic tree', async () => {
     'project/core/handler.py'
   ])).toStrictEqual({
     nodes: [
+      { id: '/', label: '/' },
       { id: '/setup.py', label: 'setup.py' },
       { id: '/project', label: 'project' },
       { id: '/project/main.py', label: 'main.py' },

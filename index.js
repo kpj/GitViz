@@ -25,17 +25,25 @@ parseGitRepository(
   let g = new Graph()
   console.log(g)
 
+  // construct graph for first commit
+  let cur = data.shift()
+  g.addNodes(cur.tree.nodes)
+  g.addEdges(cur.tree.edges)
+
+  g.render()
+
+  // iterate over following commits
+  let delay = 2000
   const iterate = async () => {
+    await timer(delay)
     for (let cur of data) {
       console.log(cur.commit.oid)
-      g.clear()
 
-      g.addNodes([{ id: '/', label: '/' }])
-      g.addNodes(cur.tree.nodes)
-      g.addEdges(cur.tree.edges)
+      if (g.changeState(cur.tree.nodes, cur.tree.edges)) {
+        g.render()
+      }
 
-      g.render()
-      await timer(3000)
+      await timer(delay)
     }
   }
   iterate()
