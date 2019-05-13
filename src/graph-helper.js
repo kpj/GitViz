@@ -22,11 +22,11 @@ export class Graph {
   }
 
   blinkColor (nodeId, color) {
-    this.cy.elements(`node[id = "${nodeId}"]`).style({
+    this.cy.getElementById(nodeId).style({
       backgroundColor: color
     })
 
-    this.cy.elements(`node[id = "${nodeId}"]`).animate({
+    this.cy.getElementById(nodeId).animate({
       style: { backgroundColor: 'gray' }
     }, {
       duration: 1000
@@ -94,7 +94,7 @@ export class Graph {
 
     // check which nodes were added/removed
     let addedNodes = proposedNodes.filter(x => !existingNodesIds.has(x.id))
-    let removedNodes = new Set(
+    let removedNodeIds = new Set(
       [...existingNodesIds].filter(x => !proposedNodeIds.has(x)))
 
     // check which edges were added
@@ -104,7 +104,7 @@ export class Graph {
       x => addedNodesIds.has(x.source) || addedNodesIds.has(x.target))
 
     console.log(addedNodes, addedEdges)
-    console.log(removedNodes)
+    console.log(removedNodeIds)
 
     // apply changes
     let somethingChanged = false
@@ -123,9 +123,9 @@ export class Graph {
 
     // remove old nodes
     this.cy.startBatch()
-    for (let nId of removedNodes) {
+    for (let nodeId of removedNodeIds) {
       // edges are removed automatically
-      this.cy.elements(`node[id = "${nId}"]`).remove()
+      this.cy.getElementById(nodeId).remove()
       somethingChanged = true
     }
     this.cy.endBatch()
