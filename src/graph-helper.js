@@ -11,13 +11,26 @@ export class Graph {
         {
           selector: 'node',
           style: {
-            'label': 'data(label)'
+            label: 'data(label)',
+            backgroundColor: 'gray'
           }
         }
       ]
     })
 
     this.layout = undefined
+  }
+
+  blinkColor (nodeId, color) {
+    this.cy.elements(`node[id = "${nodeId}"]`).style({
+      backgroundColor: color
+    })
+
+    this.cy.elements(`node[id = "${nodeId}"]`).animate({
+      style: { backgroundColor: 'gray' }
+    }, {
+      duration: 1000
+    })
   }
 
   render () {
@@ -102,6 +115,10 @@ export class Graph {
       this.addEdges(addedEdges)
 
       somethingChanged = true
+    }
+
+    for (let n of addedNodes) {
+      this.blinkColor(n.id, 'red')
     }
 
     // remove old nodes
