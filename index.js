@@ -20,7 +20,7 @@ function formatCommit (commit) {
 
   let dateStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 
-  return `${dateStr} (${commit.message})`
+  return `${dateStr} -- ${commit.message}`
 }
 
 // parsing
