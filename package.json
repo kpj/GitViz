@@ -5,8 +5,8 @@
   "repository": "https://github.com/kpj/GitViz/",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel index.html",
     "build": "parcel build index.html",
+    "dev": "parcel ./src/index.html",
     "test": "jest"
   },
   "author": "kpj",

@@ -1,7 +1,7 @@
 import 'babel-polyfill' // ReferenceError: regeneratorRuntime is not defined
 
-import { parseGitRepository } from './src/git-handler'
-import { convertFilesToTree, Graph } from './src/graph-helper'
+import { parseGitRepository } from './git-handler'
+import { convertFilesToTree, Graph } from './graph-helper'
 
 function timer (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
