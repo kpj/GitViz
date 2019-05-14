@@ -5,9 +5,10 @@
   "repository": "https://github.com/kpj/GitViz/",
   "main": "index.js",
   "scripts": {
-    "build": "parcel build index.html",
     "dev": "parcel ./src/index.html",
-    "test": "jest"
+    "build": "parcel build ./src/index.html --public-url /GitViz",
+    "test": "jest",
+    "publish": "npm run test && rm -rf dist && npm run build && git add ./dist && git commit -m 'Update gh-pages' ./dist && git subtree push --prefix dist origin gh-pages"
   },
   "author": "kpj",
   "license": "ISC",
