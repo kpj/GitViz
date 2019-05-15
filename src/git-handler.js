@@ -19,7 +19,8 @@ export async function parseGitRepository (repoUrl) {
     corsProxy: 'https://cors.isomorphic-git.org',
     url: repoUrl,
     ref: 'master',
-    singleBranch: true
+    singleBranch: true,
+    noCheckout: false
   })
 
   // get data from repo
