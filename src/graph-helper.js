@@ -156,7 +156,7 @@ export class Graph {
 }
 
 export async function convertFilesToTree (files) {
-  let allNodes = []
+  let allNodeIds = []
   let graphData = {
     nodes: [],
     edges: []
@@ -174,11 +174,11 @@ export async function convertFilesToTree (files) {
     let root = ''
     for (let comp of fname.split('/')) {
       root += '/' + comp
-      if (allNodes.includes(comp)) {
+      if (allNodeIds.includes(root)) {
         prevRoot = root
         continue
       }
-      allNodes.push(comp)
+      allNodeIds.push(root)
 
       graphData.nodes.push({
         id: root,
@@ -193,5 +193,6 @@ export async function convertFilesToTree (files) {
       prevRoot = root
     }
   }
+
   return graphData
 }
