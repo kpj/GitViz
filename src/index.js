@@ -39,7 +39,9 @@ document.getElementById('submitButton').addEventListener('click', () => {
     return Promise.all(data.map(async entry => {
       return {
         commit: entry['commit'],
-        tree: await convertFilesToTree(entry['files'])
+        tree: await convertFilesToTree(
+          entry['files'].filter(e => e.type !== 'remove')),
+        changedFiles: entry['files'].filter(e => e.type === 'modify')
       }
     }))
   }).then(data => {
@@ -68,6 +70,10 @@ document.getElementById('submitButton').addEventListener('click', () => {
 
         if (g.changeState(cur.tree.nodes, cur.tree.edges)) {
           g.render()
+        }
+
+        for (let file of cur.changedFiles) {
+          g.blinkColor(file.path, 'red')
         }
 
         await timer(delay)

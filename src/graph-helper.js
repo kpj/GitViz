@@ -29,7 +29,7 @@ export class Graph {
     this.cy.getElementById(nodeId).animate({
       style: { backgroundColor: 'gray' }
     }, {
-      duration: 1000
+      duration: 2000
     })
   }
 
@@ -169,10 +169,16 @@ export async function convertFilesToTree (files) {
   })
 
   // add each file from commit as node
-  for (let fname of files) {
+  for (let entry of files) {
+    let fname = entry.path
+
     let prevRoot = ''
     let root = ''
     for (let comp of fname.split('/')) {
+      if (comp.length === 0) {
+        continue
+      }
+
       root += '/' + comp
       if (allNodeIds.includes(root)) {
         prevRoot = root
