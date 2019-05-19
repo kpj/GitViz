@@ -3,10 +3,10 @@ import { convertFilesToTree } from '../graph-helper'
 
 test('construct basic tree', async () => {
   expect(await convertFilesToTree([
-    'setup.py',
-    'project/main.py',
-    'project/utils.py',
-    'project/core/handler.py'
+    { path: 'setup.py' },
+    { path: 'project/main.py' },
+    { path: 'project/utils.py' },
+    { path: 'project/core/handler.py' }
   ])).toStrictEqual({
     nodes: [
       { id: '/', label: '/' },
