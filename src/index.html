@@ -1,13 +1,9 @@
 <html>
 <head>
   <style type="text/css">
-    #input {
+    #setup {
       display: flex;
       justify-content: center;
-    }
-
-    #content {
-      display: none;
     }
 
     #header {
@@ -23,14 +19,7 @@
   </style>
 </head>
 <body>
-  <div id="input">
-    <input id="repoUrlInputField" size=100 value="https://github.com/kpj/project_manager"></input>
-    <button id="submitButton">Parse repository</button>
-  </div>
-  <div id="content">
-    <span id="header">loading</span>
-    <div id="container"></div>
-    <script src="./index.js"></script>
-  </div>
+  <div id="app"></div>
+  <script src="./index.js"></script>
 </body>
 </html>

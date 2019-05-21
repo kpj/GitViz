@@ -26,6 +26,11 @@
     "babel-polyfill": "^6.26.0",
     "cytoscape": "^3.6.0",
     "cytoscape-cola": "^2.3.0",
-    "isomorphic-git": "^0.54.2"
+    "isomorphic-git": "^0.54.2",
+    "vue": "^2.6.10",
+    "vuex": "^3.1.1"
+  },
+  "alias": {
+    "vue" : "./node_modules/vue/dist/vue.common.js"
   }
 }
