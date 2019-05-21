@@ -21,7 +21,7 @@ export class Graph {
     this.layout = undefined
   }
 
-  blinkColor (nodeId, color) {
+  blinkColor (nodeId, color, blinkDuration) {
     this.cy.getElementById(nodeId).style({
       backgroundColor: color
     })
@@ -29,7 +29,7 @@ export class Graph {
     this.cy.getElementById(nodeId).animate({
       style: { backgroundColor: 'gray' }
     }, {
-      duration: 2000
+      duration: blinkDuration
     })
   }
 

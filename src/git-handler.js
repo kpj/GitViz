@@ -1,7 +1,7 @@
 import FS from '@isomorphic-git/lightning-fs'
 const git = require('isomorphic-git')
 
-export async function parseGitRepository (repoUrl) {
+export async function parseGitRepository (repoUrl, branch) {
   // prepare filesystem
   const fs = new FS('fs', { wipe: true })
   git.plugins.set('fs', fs)
@@ -18,7 +18,7 @@ export async function parseGitRepository (repoUrl) {
     dir,
     corsProxy: 'https://cors.isomorphic-git.org',
     url: repoUrl,
-    ref: 'master',
+    ref: branch,
     singleBranch: true,
     noCheckout: true
   })

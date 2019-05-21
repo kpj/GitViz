@@ -29,7 +29,7 @@ export function createVisualization (state) {
 
   // start procedure
   parseGitRepository(
-    state.repoUrl
+    state.repoUrl, state.gitBranch
   ).then(data => {
     return Promise.all(data.map(async entry => {
       return {
@@ -56,7 +56,7 @@ export function createVisualization (state) {
     document.getElementById('header').innerHTML = formatCommit(cur.commit)
 
     // iterate over following commits
-    let delay = 2000
+    let delay = state.iterationDuration
     const iterate = async () => {
       await timer(delay)
       for (let cur of data) {
@@ -68,7 +68,7 @@ export function createVisualization (state) {
         }
 
         for (let file of cur.changedFiles) {
-          g.blinkColor(file.path, 'red')
+          g.blinkColor(file.path, 'red', state.iterationDuration)
         }
 
         await timer(delay)
