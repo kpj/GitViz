@@ -20,7 +20,7 @@ export async function parseGitRepository (repoUrl) {
     url: repoUrl,
     ref: 'master',
     singleBranch: true,
-    noCheckout: false
+    noCheckout: true
   })
 
   // get data from repo
