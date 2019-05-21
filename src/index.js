@@ -1,78 +1,80 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexForms, { Form } from 'vuex-forms'
 
 import { createVisualization } from './visualization'
 
 Vue.use(Vuex)
+Vue.use(VuexForms)
 
 const store = new Vuex.Store({
   state: {
-    repoUrl: 'https://github.com/kpj/GitViz',
     inSetupState: true,
-    iterationDuration: 2000,
-    gitBranch: 'master'
+    config: {
+      repoUrl: 'https://github.com/kpj/GitViz',
+      iterationDuration: 2000,
+      gitBranch: 'master'
+    }
   },
   mutations: {
-    repoUrl: (state, value) => {
-      state.repoUrl = value
+    updateConfig: (state, value) => {
+      state.config = value
     },
     finishSetup: state => {
       state.inSetupState = false
-    },
-    iterationDuration: (state, value) => {
-      state.iterationDuration = value
-    },
-    gitBranch: (state, value) => {
-      state.gitBranch = value
     }
   }
 })
 
 const SetupDialog = {
-  template: `
-    <div id="setup">
-      <label>Repository url:</label>
-      <input v-model.trim="repoUrl" size=100></input>
-      <br>
-      <label>Git branch:</label>
-      <input v-model.trim="gitBranch"></input>
-      <br>
-      <label>Iteration duration:</label>
-      <input v-model.trim="iterationDuration"></input>
-      <br>
-      <button v-on:click="parseRepo">Parse repository</button>
-    </div>
-  `,
-  computed: {
-    repoUrl: {
-      get () {
-        return this.$store.state.repoUrl
-      },
-      set (value) {
-        this.$store.commit('repoUrl', value)
-      }
-    },
-    iterationDuration: {
-      get () {
-        return this.$store.state.iterationDuration
-      },
-      set (value) {
-        this.$store.commit('iterationDuration', value)
-      }
-    },
-    gitBranch: {
-      get () {
-        return this.$store.state.gitBranch
-      },
-      set (value) {
-        this.$store.commit('gitBranch', value)
-      }
+  data: function () {
+    return {
+      form: new Form(this, {
+        repoUrl: this.$store.state.config.repoUrl,
+        gitBranch: this.$store.state.config.gitBranch,
+        iterationDuration: this.$store.state.config.iterationDuration
+      })
     }
   },
+  template: `
+    <form name="basic-form" @submit.prevent="form.submit()">
+      <vuex-text label="repoUrl:"
+                 id="repoUrl"
+                 name="repoUrl"
+                 v-input-sync:repoUrl="form">
+      </vuex-text>
+
+      <vuex-text label="gitBranch:"
+                 id="gitBranch"
+                 name="gitBranch"
+                 v-input-sync:gitBranch="form">
+      </vuex-text>
+
+      <vuex-text label="iterationDuration [ms]:"
+                 id="iterationDuration"
+                 name="iterationDuration"
+                 v-input-sync:iterationDuration="form">
+      </vuex-text>
+
+      <div class="has-text-centered">
+          <button type="submit"
+                  class="button"
+                  v-on:click="submitConfig">
+            Submit
+          </button>
+      </div>
+    </form>
+  `,
   methods: {
-    parseRepo: function () {
+    submitConfig: function () {
+      this.$store.commit('updateConfig', {
+        repoUrl: this.form.repoUrl,
+        gitBranch: this.form.gitBranch,
+        iterationDuration: this.form.iterationDuration
+      })
       this.$store.commit('finishSetup')
-      createVisualization(store.state)
+
+      createVisualization(store.state.config)
     }
   }
 }
@@ -100,9 +102,6 @@ const app = new Vue({
     inSetupState: {
       get () {
         return this.$store.state.inSetupState
-      },
-      set (value) {
-        this.$store.commit('finishSetup')
       }
     }
   }
