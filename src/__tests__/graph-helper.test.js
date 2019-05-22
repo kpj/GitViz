@@ -9,13 +9,13 @@ test('construct basic tree', async () => {
     { path: 'project/core/handler.py' }
   ])).toStrictEqual({
     nodes: [
-      { id: '/', label: '/' },
-      { id: '/setup.py', label: 'setup.py' },
-      { id: '/project', label: 'project' },
-      { id: '/project/main.py', label: 'main.py' },
-      { id: '/project/utils.py', label: 'utils.py' },
-      { id: '/project/core', label: 'core' },
-      { id: '/project/core/handler.py', label: 'handler.py' }
+      { id: '/', label: '/', type: 'directory' },
+      { id: '/setup.py', label: 'setup.py', type: 'file' },
+      { id: '/project', label: 'project', type: 'directory' },
+      { id: '/project/main.py', label: 'main.py', type: 'file' },
+      { id: '/project/utils.py', label: 'utils.py', type: 'file' },
+      { id: '/project/core', label: 'core', type: 'directory' },
+      { id: '/project/core/handler.py', label: 'handler.py', type: 'file' }
     ],
     edges: [
       { id: undefined, source: '/', target: '/setup.py' },
