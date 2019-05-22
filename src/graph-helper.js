@@ -14,6 +14,18 @@ export class Graph {
             label: 'data(label)',
             backgroundColor: 'gray'
           }
+        },
+        {
+          selector: 'node[type="file"]',
+          style: {
+            shape: 'ellipse'
+          }
+        },
+        {
+          selector: 'node[type="directory"]',
+          style: {
+            shape: 'rectangle'
+          }
         }
       ]
     })
@@ -57,7 +69,8 @@ export class Graph {
         group: 'nodes',
         data: {
           id: entry.id,
-          label: entry.label
+          label: entry.label,
+          type: entry.type
         },
         position: entry.position || { x: 0, y: 0 }
       })
@@ -165,7 +178,8 @@ export async function convertFilesToTree (files) {
   // add root node
   graphData.nodes.push({
     id: '/',
-    label: '/'
+    label: '/',
+    type: 'directory'
   })
 
   // add each file from commit as node
@@ -174,7 +188,11 @@ export async function convertFilesToTree (files) {
 
     let prevRoot = ''
     let root = ''
-    for (let comp of fname.split('/')) {
+
+    let parts = fname.split('/')
+    for (let idx in parts) {
+      let comp = parts[idx]
+
       if (comp.length === 0) {
         continue
       }
@@ -188,7 +206,8 @@ export async function convertFilesToTree (files) {
 
       graphData.nodes.push({
         id: root,
-        label: comp
+        label: comp,
+        type: (parseInt(idx) === parts.length - 1) ? 'file' : 'directory'
       })
       graphData.edges.push({
         id: undefined,
