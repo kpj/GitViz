@@ -32,8 +32,8 @@ export async function parseGitRepository (repoUrl, branch) {
   await pfs.mkdir(dir)
 
   // clone repo
-  console.log('Clone repository')
-  log('clone repository')
+  console.log('Cloning repository')
+  log('Cloning repository')
 
   const onProgress = async progress => {
     // console.log(progress)
@@ -52,8 +52,8 @@ export async function parseGitRepository (repoUrl, branch) {
   emitter.off('progress', onProgress)
 
   // get data from repo
-  console.log('Parse commits')
-  log('parse commits')
+  console.log('Parsing commits')
+  log('Parsing commits')
   const commitList = await git.log({ dir })
   commitList.reverse()
 
