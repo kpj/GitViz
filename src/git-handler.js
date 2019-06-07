@@ -1,10 +1,29 @@
+import 'babel-polyfill' // ReferenceError: regeneratorRuntime is not defined
+
 import FS from '@isomorphic-git/lightning-fs'
+import EventEmitter from 'events'
 const git = require('isomorphic-git')
 
+self.onmessage = e => {
+  parseGitRepository(e.data.repoUrl, e.data.gitBranch).then(data => {
+    postMessage({ type: 'result', data: data, state: e.data })
+  })
+}
+
+let log = text => {
+  postMessage({
+    type: 'progress',
+    text: text
+  })
+}
+
 export async function parseGitRepository (repoUrl, branch) {
+  const emitter = new EventEmitter()
+
   // prepare filesystem
   const fs = new FS('fs', { wipe: true })
   git.plugins.set('fs', fs)
+  git.plugins.set('emitter', emitter)
 
   const pfs = fs.promises
 
@@ -14,6 +33,14 @@ export async function parseGitRepository (repoUrl, branch) {
 
   // clone repo
   console.log('Clone repository')
+  log('clone repository')
+
+  const onProgress = async progress => {
+    // console.log(progress)
+    log(`${progress.phase} [${progress.loaded}/${progress.total}]`)
+  }
+
+  emitter.on('progress', onProgress)
   await git.clone({
     dir,
     corsProxy: 'https://cors.isomorphic-git.org',
@@ -22,9 +49,11 @@ export async function parseGitRepository (repoUrl, branch) {
     singleBranch: true,
     noCheckout: true
   })
+  emitter.off('progress', onProgress)
 
   // get data from repo
   console.log('Parse commits')
+  log('parse commits')
   const commitList = await git.log({ dir })
   commitList.reverse()
 
@@ -53,6 +82,9 @@ export async function parseGitRepository (repoUrl, branch) {
       commit: nextCommit,
       files
     })
+
+    // update progress display
+    log(`Comparing commits [${i + 1}/${commitList.length - 1}]`)
   }
 
   return data

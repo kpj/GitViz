@@ -82,7 +82,7 @@ const SetupDialog = {
 const NetworkView = {
   template: `
     <div>
-      <div id="header">loading</div>
+      <div id="header">loading (<span id="progress">undef</span>)</div>
       <div id="container"></div>
     </div>
   `
