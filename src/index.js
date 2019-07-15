@@ -14,7 +14,8 @@ const store = new Vuex.Store({
       repoUrl: 'https://github.com/kpj/GitViz',
       iterationDuration: 2000,
       gitBranch: 'master'
-    }
+    },
+    commitList: []
   },
   mutations: {
     updateConfig: (state, value) => {
@@ -22,6 +23,9 @@ const store = new Vuex.Store({
     },
     finishSetup: state => {
       state.inSetupState = false
+    },
+    addCommit: (state, value) => {
+      state.commitList.push(value)
     }
   }
 })
@@ -74,16 +78,53 @@ const SetupDialog = {
       })
       this.$store.commit('finishSetup')
 
-      createVisualization(store.state.config)
+      createVisualization(this.$store)
+    }
+  }
+}
+
+let formatCommit = commit => {
+  console.log(commit)
+  let date = new Date(commit.committer.timestamp * 1000)
+
+  var year = date.getFullYear()
+  var month = (date.getMonth() + 1).toString().padStart(2, '0') // lol@+1
+  var day = date.getDate().toString().padStart(2, '0')
+  var hours = date.getHours().toString().padStart(2, '0')
+  var minutes = date.getMinutes().toString().padStart(2, '0')
+  var seconds = date.getSeconds().toString().padStart(2, '0')
+
+  let dateStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+
+  return `${dateStr} -- ${commit.message}`
+}
+
+const CommitView = {
+  template: `
+    <div id="commitView">
+      <span
+        v-for="(commit, index) in commitList"
+        :class="['commit', index === 0 ? 'active' : 'inactive']">
+        {{ commit }}
+      </span>
+    </div>
+  `,
+  computed: {
+    commitList: {
+      get () {
+        return this.$store.state.commitList.map(formatCommit).reverse()
+      }
     }
   }
 }
 
 const NetworkView = {
+  components: { CommitView },
   template: `
     <div>
       <div id="header">loading (<span id="progress">undef</span>)</div>
       <div id="container"></div>
+      <CommitView></CommitView>
     </div>
   `
 }
