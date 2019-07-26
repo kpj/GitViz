@@ -1,6 +1,11 @@
 import 'babel-polyfill'
 import { convertFilesToTree } from '../graph-helper'
 
+// deal with jest being unable to handle yaml files
+// parcel normally bundles them for us
+jest.mock('../languages.yml', () => 1)
+
+// tests
 test('construct basic tree', async () => {
   expect(await convertFilesToTree([
     { path: 'setup.py' },
@@ -9,13 +14,13 @@ test('construct basic tree', async () => {
     { path: 'project/core/handler.py' }
   ])).toStrictEqual({
     nodes: [
-      { id: '/', label: '/', type: 'directory' },
-      { id: '/setup.py', label: 'setup.py', type: 'file' },
-      { id: '/project', label: 'project', type: 'directory' },
-      { id: '/project/main.py', label: 'main.py', type: 'file' },
-      { id: '/project/utils.py', label: 'utils.py', type: 'file' },
-      { id: '/project/core', label: 'core', type: 'directory' },
-      { id: '/project/core/handler.py', label: 'handler.py', type: 'file' }
+      { id: '/', label: '/', type: 'directory', extension: undefined },
+      { id: '/setup.py', label: 'setup.py', type: 'file', extension: 'py' },
+      { id: '/project', label: 'project', type: 'directory', extension: undefined },
+      { id: '/project/main.py', label: 'main.py', type: 'file', extension: 'py' },
+      { id: '/project/utils.py', label: 'utils.py', type: 'file', extension: 'py' },
+      { id: '/project/core', label: 'core', type: 'directory', extension: undefined },
+      { id: '/project/core/handler.py', label: 'handler.py', type: 'file', extension: 'py' }
     ],
     edges: [
       { id: undefined, source: '/', target: '/setup.py' },

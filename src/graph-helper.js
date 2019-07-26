@@ -1,13 +1,15 @@
 import cytoscape from 'cytoscape'
 import cola from 'cytoscape-cola'
 
+import { languageStyles, languageStylesDict } from './language-data'
+
 export class Graph {
   constructor (repoUrl) {
     cytoscape.use(cola)
 
     this.cy = cytoscape({
       container: document.getElementById('container'),
-      style: [
+      style: [...[
         {
           selector: 'node',
           style: {
@@ -27,19 +29,23 @@ export class Graph {
             shape: 'rectangle'
           }
         }
-      ]
+      ], ...languageStyles]
     })
 
     this.layout = undefined
   }
 
   blinkColor (nodeId, color, blinkDuration) {
+    // set highlight color
     this.cy.getElementById(nodeId).style({
       backgroundColor: color
     })
 
+    // revert to original color
+    let origColor = languageStylesDict[this.cy.getElementById(nodeId).data('extension')] || 'gray' // this.cy.getElementById(nodeId).style('background-color')
+
     this.cy.getElementById(nodeId).animate({
-      style: { backgroundColor: 'gray' }
+      style: { backgroundColor: origColor }
     }, {
       duration: blinkDuration
     })
@@ -70,7 +76,8 @@ export class Graph {
         data: {
           id: entry.id,
           label: entry.label,
-          type: entry.type
+          type: entry.type,
+          extension: entry.extension
         },
         position: entry.position || { x: 0, y: 0 }
       })
@@ -179,7 +186,8 @@ export async function convertFilesToTree (files) {
   graphData.nodes.push({
     id: '/',
     label: '/',
-    type: 'directory'
+    type: 'directory',
+    extension: undefined
   })
 
   // add each file from commit as node
@@ -204,10 +212,15 @@ export async function convertFilesToTree (files) {
       }
       allNodeIds.push(root)
 
+      // parse file extension (undefined if no extension)
+      let ext = comp.split('.').slice(1).pop()
+
+      // store generated data
       graphData.nodes.push({
         id: root,
         label: comp,
-        type: (parseInt(idx) === parts.length - 1) ? 'file' : 'directory'
+        type: (parseInt(idx) === parts.length - 1) ? 'file' : 'directory',
+        extension: ext
       })
       graphData.edges.push({
         id: undefined,

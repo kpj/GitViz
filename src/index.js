@@ -84,7 +84,6 @@ const SetupDialog = {
 }
 
 let formatCommit = commit => {
-  console.log(commit)
   let date = new Date(commit.committer.timestamp * 1000)
 
   var year = date.getFullYear()
