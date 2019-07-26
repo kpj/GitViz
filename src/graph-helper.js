@@ -60,9 +60,14 @@ export class Graph {
     // create new layout
     this.layout = this.cy.layout({
       name: 'cola',
-      fit: false,
+      fit: true, // false
       infinite: true,
-      randomize: false
+      randomize: false,
+      ungrabifyWhileSimulating: true,
+      nodeDimensionsIncludeLabels: true,
+      // ready: () => {
+      //   this.cy.fit()
+      // }
     })
     this.layout.run()
   }
