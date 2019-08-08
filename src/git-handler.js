@@ -111,8 +111,7 @@ async function getFileStateChanges (commitHash1, commitHash2, dir) {
       }
 
       // generate ids
-      await A.populateHash()
-      await B.populateHash()
+      await Promise.all([A.populateHash(), B.populateHash()])
 
       // determine modification type
       let type = 'equal'
