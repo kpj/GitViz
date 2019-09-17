@@ -8,7 +8,7 @@
     "dev": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html --public-url /GitViz",
     "test": "jest",
-    "deploy": "npm run test && rm -rf dist && npm run build && git add ./dist && git commit -m 'Update gh-pages' ./dist && git subtree push --prefix dist origin gh-pages"
+    "deploy": "npm run test && git worktree add -f dist gh-pages && npm run build && cd ./dist && git add . && git commit -m \"Update gh-pages (ref-commit: $(git log '--format=format:%H' master -1))\" && git push origin gh-pages && cd .. && rm -rf dist"
   },
   "author": "kpj",
   "license": "ISC",
