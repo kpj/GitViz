@@ -4,6 +4,9 @@ import VuexForms, { Form } from 'vuex-forms'
 
 import { createVisualization } from './visualization'
 
+import './assets/css/tailwind.css'
+import './assets/css/visualization.css'
+
 Vue.use(Vuex)
 Vue.use(VuexForms)
 
@@ -60,9 +63,8 @@ const SetupDialog = {
                  v-input-sync:iterationDuration="form">
       </vuex-text>
 
-      <div class="has-text-centered">
+      <div>
           <button type="submit"
-                  class="button"
                   v-on:click="submitConfig">
             Submit
           </button>
