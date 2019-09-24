@@ -155,10 +155,6 @@ export class Graph {
       somethingChanged = true
     }
 
-    for (let n of addedNodes) {
-      this.blinkColor(n.id, 'red')
-    }
-
     // remove old nodes
     this.cy.startBatch()
     for (let nodeId of removedNodeIds) {
@@ -168,7 +164,7 @@ export class Graph {
     }
     this.cy.endBatch()
 
-    return somethingChanged
+    return [somethingChanged, addedNodes]
   }
 
   clear () {

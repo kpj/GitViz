@@ -56,10 +56,18 @@ function render (data, state) {
       console.log(cur.commit.oid)
       store.commit('addCommit', cur.commit)
 
-      if (g.changeState(cur.tree.nodes, cur.tree.edges)) {
+      // change state of graph
+      let [somethingChanged, addedNodes] = g.changeState(cur.tree.nodes, cur.tree.edges)
+
+      // restart layout
+      if (somethingChanged) {
         g.render()
       }
 
+      // highlight changes
+      for (let n of addedNodes) {
+        g.blinkColor(n.id, 'red', state.iterationDuration)
+      }
       for (let file of cur.changedFiles) {
         g.blinkColor(file.path, 'red', state.iterationDuration)
       }
