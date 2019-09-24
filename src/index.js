@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     inSetupState: true,
     config: {
       repoUrl: 'https://github.com/kpj/GitViz',
-      iterationDuration: 2000,
+      iterationDuration: 1000,
       gitBranch: 'master'
     },
     commitList: []
