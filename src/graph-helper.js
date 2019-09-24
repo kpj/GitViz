@@ -64,7 +64,7 @@ export class Graph {
       infinite: true,
       randomize: false,
       ungrabifyWhileSimulating: true,
-      nodeDimensionsIncludeLabels: true,
+      nodeDimensionsIncludeLabels: false,
       // ready: () => {
       //   this.cy.fit()
       // }
